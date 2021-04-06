@@ -1,5 +1,6 @@
 import * as axios from "axios";
 import {profileAPI, usersAPI} from "../Api/Api";
+import {Dispatch} from "redux";
 
 let ADD_POST = 'ADD-POST'
 let UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT'
@@ -7,8 +8,46 @@ let SET_USER_PROFILE = 'SET_USER_PROFILE'
 let SET_STATUS = 'SET_STATUS'
 let SAVE_PHOTO = 'SAVE_PHOTO'
 
+type AddPostActionType = {
+    type: typeof ADD_POST
+}
 
-let initialState = {
+type UpdateNewPostTextActionType = {
+    type: typeof UPDATE_NEW_POST_TEXT
+    newText: string
+}
+
+type SetUserProfileActionType = {
+    type: typeof SET_USER_PROFILE
+    profile: any
+}
+
+type SetStatusActionType = {
+    type: typeof SET_STATUS
+    status: string
+}
+
+type SavePhotoActionType = {
+    type: typeof SAVE_PHOTO
+    photos: any
+}
+
+
+type InitialStateType = {
+    posts: Array<PostsType>
+    newPostText: string
+    profile: any
+    status: string
+
+}
+
+type PostsType = {
+    id: number
+    message: string
+    likesCount: string
+}
+
+let initialState: InitialStateType = {
     posts: [
         {id: 1, message: 'How are you', likesCount: '15'},
         {id: 2, message: "It's my first project men", likesCount: '20'}
@@ -19,7 +58,11 @@ let initialState = {
 
 }
 
-export const profileReducer = (state = initialState, action) => {
+type ActionTypes = AddPostActionType | UpdateNewPostTextActionType
+    | SetUserProfileActionType | SetStatusActionType
+    |SavePhotoActionType
+
+export const profileReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
         case  ADD_POST: {
 
@@ -65,47 +108,47 @@ export const profileReducer = (state = initialState, action) => {
 }
 
 
-export const addPostActionCreator = () => {
+export const addPostActionCreator = (): AddPostActionType => {
     return {type: ADD_POST}
 }
 
-export const updateNewPostTextActionCreator = (text) => {
+export const updateNewPostTextActionCreator = (text: string): UpdateNewPostTextActionType => {
     return {type: UPDATE_NEW_POST_TEXT, newText: text}
 }
 
-export const setUserProfileActionCreator = (profile) => {
+export const setUserProfileActionCreator = (profile: any): SetUserProfileActionType => {
     return {type: SET_USER_PROFILE, profile}
 }
 
-export const setStatusActionCreator = (status) => {
+export const setStatusActionCreator = (status: string): SetStatusActionType => {
     return {type: SET_STATUS, status}
 }
 
-const savePhotoAC = (photos) => {
+const savePhotoAC = (photos: any): SavePhotoActionType => {
     return {type: SAVE_PHOTO, photos}
 }
 
 
-export const getProfileTC = (userId) => {
-    return (dispatch) => {
-        usersAPI.getProfile(userId).then(response => {
+export const getProfileTC = (userId: number) => {
+    return (dispatch: Dispatch) => {
+        usersAPI.getProfile(userId).then((response: any) => {
             dispatch(setUserProfileActionCreator(response.data))
         })
     }
 }
 
 
-export const getStatusTC = (userId) => {
-    return (dispatch) => {
-        profileAPI.getStatus(userId).then(response => {
+export const getStatusTC = (userId: number) => {
+    return (dispatch: Dispatch) => {
+        profileAPI.getStatus(userId).then((response: any) => {
             dispatch(setStatusActionCreator(response.data))
         })
     }
 }
 
-export const updateStatusTC = (status) => {
-    return (dispatch) => {
-        profileAPI.updateStatus(status).then(response => {
+export const updateStatusTC = (status: string) => {
+    return (dispatch: Dispatch) => {
+        profileAPI.updateStatus(status).then((response: any) => {
             if (response.data.resultCode === 0) {
                 dispatch(setStatusActionCreator(status))
             }
@@ -113,8 +156,8 @@ export const updateStatusTC = (status) => {
     }
 }
 
-export const savePhotoTC = (file) => {
-    return async (dispatch) => {
+export const savePhotoTC = (file: any) => {
+    return async (dispatch: Dispatch) => {
         let response = await profileAPI.savePhoto(file)
         if (response.data.resultCode === 0) {
             dispatch(savePhotoAC(response.data.data.photos))
@@ -130,8 +173,8 @@ export const savePhotoTC = (file) => {
     }
 }
 
-export const saveProfileTC = (profile) => {
-    return async (dispatch, getState) => {
+export const saveProfileTC = (profile: any) => {
+    return async (dispatch: any, getState: any) => {
         const userId = getState().auth.userId
         const response = await profileAPI.saveProfile(profile)
         if (response.data.resultCode === 0) {

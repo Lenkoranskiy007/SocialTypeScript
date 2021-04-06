@@ -33,7 +33,7 @@ export const Login = (props) => {
 
 
         onSubmit: values => {
-            alert(JSON.stringify(values));
+            // alert(JSON.stringify(values));
             // formik.resetForm()
 
              props.login(values.email, values.password ,values.rememberMe, values.captchaUrl)

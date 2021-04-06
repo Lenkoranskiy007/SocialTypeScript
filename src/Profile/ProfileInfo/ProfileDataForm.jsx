@@ -24,7 +24,6 @@ export const  ProfileDataForm = (props) => {
 
         },
         onSubmit: values => {
-            alert(JSON.stringify(values));
             formik.resetForm()
             props.saveProfileTC(values)
             props.setEditMode(false)

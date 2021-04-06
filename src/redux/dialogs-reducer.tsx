@@ -1,7 +1,31 @@
 let ADD_MESSAGE = 'ADD-MESSAGE'
 let UPDATE_NEW_MESSAGE = 'UPDATE-NEW-MESSAGE'
 
-let initialState = {
+type InitialStateType = {
+    dialogs: Array<DialogsType>
+    messages: Array<MessagesType>
+    newMessageText: string
+}
+
+type DialogsType = {
+    id: number
+    name: string
+}
+type MessagesType = {
+    id: number
+    message: string
+}
+
+type AddMessageActionType = {
+    type: typeof ADD_MESSAGE
+}
+
+type UpdateNewMessageActionType = {
+    type: typeof UPDATE_NEW_MESSAGE
+    messageText: string
+}
+
+let initialState: InitialStateType = {
     dialogs: [
         {id: 1, name: 'Farid'},
         {id: 2, name: 'Sudjaat'},
@@ -18,7 +42,7 @@ let initialState = {
 
 }
 
-export const dialogsReducer = (state = initialState, action) => {
+export const dialogsReducer = (state = initialState, action: any): InitialStateType => {
     let stateCopy
     switch (action.type) {
         case ADD_MESSAGE: {
@@ -38,17 +62,17 @@ export const dialogsReducer = (state = initialState, action) => {
             stateCopy.newMessageText = action.messageText
             return stateCopy
 
-      }
+        }
         default: {
             return state
         }
     }
 }
 
-export const addMessageActionCreator = () => {
+export const addMessageActionCreator = (): AddMessageActionType => {
     return {type: ADD_MESSAGE}
 }
 
-export const updateNewMessageActionCreator = (messageText) => {
+export const updateNewMessageActionCreator = (messageText: string): UpdateNewMessageActionType  => {
     return {type: UPDATE_NEW_MESSAGE, messageText: messageText}
 }
