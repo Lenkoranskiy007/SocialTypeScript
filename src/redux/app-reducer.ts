@@ -1,7 +1,7 @@
 import {getAuthUserData} from "./auth-reducer";
 import {Dispatch} from "redux";
 
-const SET_INITIALIZED =  'SET_INITIALIZED'
+const SET_INITIALIZED = 'SET_INITIALIZED'
 type InitializedSuccessActionType = {
     type: typeof SET_INITIALIZED
 }
@@ -16,12 +16,12 @@ const initialState = {
 }
 
 export const appReducer = (state = initialState, action: any): InitialStateType => {
-    switch(action.type) {
+    switch (action.type) {
         case SET_INITIALIZED:
-            return  {
-            ...state,
+            return {
+                ...state,
                 initialized: true
-        }
+            }
         default:
             return state
     }

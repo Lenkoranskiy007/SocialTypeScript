@@ -19,7 +19,7 @@ type UpdateNewPostTextActionType = {
 
 type SetUserProfileActionType = {
     type: typeof SET_USER_PROFILE
-    profile: any
+    profile: ProfileType
 }
 
 type SetStatusActionType = {
@@ -33,36 +33,63 @@ type SavePhotoActionType = {
 }
 
 
-type InitialStateType = {
-    posts: Array<PostsType>
-    newPostText: string
-    profile: any
-    status: string
-
-}
+// type InitialStateType = {
+//     posts: Array<PostsType>
+//     newPostText: string
+//     profile: ProfileType
+//     status: string
+//
+// }
 
 type PostsType = {
     id: number
     message: string
     likesCount: string
 }
+type PhotosType = {
+    small: string | null
+    large: string | null
+}
 
-let initialState: InitialStateType = {
+type ProfileType = {
+    userId: number
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    contacts: ContactsType
+    photos: PhotosType
+}
+
+type ContactsType = {
+    github: string
+    vk: string
+    facebook: string
+    instagram: string
+    twitter: string
+    website: string
+    youtube: string
+    mainLink: string
+
+}
+
+let initialState = {
     posts: [
         {id: 1, message: 'How are you', likesCount: '15'},
         {id: 2, message: "It's my first project men", likesCount: '20'}
-    ],
+    ] as Array<PostsType>,
     newPostText: 'Just do it',
-    profile: null,
+    profile: null as ProfileType | null,
     status: ''
 
 }
 
+type initialStateType = typeof initialState
+
 type ActionTypes = AddPostActionType | UpdateNewPostTextActionType
     | SetUserProfileActionType | SetStatusActionType
-    |SavePhotoActionType
+    | SavePhotoActionType
 
-export const profileReducer = (state = initialState, action: any): InitialStateType => {
+export const profileReducer = (state = initialState, action: any): initialStateType => {
     switch (action.type) {
         case  ADD_POST: {
 
@@ -97,7 +124,7 @@ export const profileReducer = (state = initialState, action: any): InitialStateT
             debugger
             return {
                 ...state,
-                profile: {...state.profile, photos: action.photos}
+                profile: {...state.profile, photos: action.photos} as ProfileType
             }
 
 
@@ -116,7 +143,7 @@ export const updateNewPostTextActionCreator = (text: string): UpdateNewPostTextA
     return {type: UPDATE_NEW_POST_TEXT, newText: text}
 }
 
-export const setUserProfileActionCreator = (profile: any): SetUserProfileActionType => {
+export const setUserProfileActionCreator = (profile: ProfileType): SetUserProfileActionType => {
     return {type: SET_USER_PROFILE, profile}
 }
 
@@ -124,7 +151,7 @@ export const setStatusActionCreator = (status: string): SetStatusActionType => {
     return {type: SET_STATUS, status}
 }
 
-const savePhotoAC = (photos: any): SavePhotoActionType => {
+const savePhotoAC = (photos: PhotosType): SavePhotoActionType => {
     return {type: SAVE_PHOTO, photos}
 }
 
@@ -173,7 +200,7 @@ export const savePhotoTC = (file: any) => {
     }
 }
 
-export const saveProfileTC = (profile: any) => {
+export const saveProfileTC = (profile: ProfileType) => {
     return async (dispatch: any, getState: any) => {
         const userId = getState().auth.userId
         const response = await profileAPI.saveProfile(profile)

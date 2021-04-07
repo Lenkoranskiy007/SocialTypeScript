@@ -73,6 +73,6 @@ export const addMessageActionCreator = (): AddMessageActionType => {
     return {type: ADD_MESSAGE}
 }
 
-export const updateNewMessageActionCreator = (messageText: string): UpdateNewMessageActionType  => {
+export const updateNewMessageActionCreator = (messageText: string): UpdateNewMessageActionType => {
     return {type: UPDATE_NEW_MESSAGE, messageText: messageText}
 }
