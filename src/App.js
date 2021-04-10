@@ -13,6 +13,7 @@ import {connect} from "react-redux";
 import {initializeAppTC} from "./redux/app-reducer";
 import {Preloader} from "./logo/Preloader";
 import {withSuspense} from "./hoc/withSuspense";
+import {AppStateType} from "./redux/redux-store";
 
 
 const DialogsContainer = React.lazy(() => import('./Dialogs/DialogsContainer'));
@@ -32,10 +33,13 @@ class  App extends React.Component {
      }
 
 
+        // @ts-ignore
         return (
+
             <div className="App-wrapper">
                 <HeadersContainer/>
                 <Navbar/>
+
                 <div className='app-wrapper-content'>
                     <Route path='/dialogs' render={withSuspense(DialogsContainer)}/>
                     <Route path='/profile/:userId?'

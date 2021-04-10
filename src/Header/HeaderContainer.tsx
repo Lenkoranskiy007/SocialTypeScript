@@ -3,8 +3,15 @@ import {connect} from "react-redux";
 import { logoutTC, setUserDataActionCreator} from "../redux/auth-reducer";
 import * as axios from "axios";
 import {Header} from "./Header";
+import {AppStateType} from "../redux/redux-store";
 
-class HeaderContainer extends React.Component {
+type HeaderContainerPropsType = {
+    isAuth: boolean
+    login: any
+    logoutTC: () => void
+}
+
+class HeaderContainer extends React.Component<HeaderContainerPropsType> {
 
 
 
@@ -13,12 +20,13 @@ class HeaderContainer extends React.Component {
     }
 }
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType) => {
     return {
         isAuth: state.auth.isAuth,
         login: state.auth.login
     }
 }
 
+// @ts-ignore
 let HeadersContainer = connect(mapStateToProps, {setUserDataActionCreator,  logoutTC})(HeaderContainer)
 export default HeadersContainer

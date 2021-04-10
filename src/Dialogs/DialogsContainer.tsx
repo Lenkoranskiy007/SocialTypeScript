@@ -3,22 +3,23 @@ import {addMessageActionCreator, updateNewMessageActionCreator} from "../redux/d
 import {Dialogs} from "./Dialogs";
 import {connect} from "react-redux";
 import {withAuthRedirect} from "../hoc/withAutthRedirect";
-import {compose} from "redux";
+import {compose, Dispatch} from "redux";
+import {AppStateType} from "../redux/redux-store";
 
-const mapStateToProps  = (state) => {
+const mapStateToProps  = (state: AppStateType) => {
     return {
         dialogsPage: state.dialogsPage
 
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        onSendMessage: (newMessageBody) => {
-            let action = addMessageActionCreator(newMessageBody)
+        onSendMessage: () => {
+            let action = addMessageActionCreator()
             dispatch(action)
         },
-        onChangeMessage: (messageText) => {
+        onChangeMessage: (messageText: string) => {
             let action = updateNewMessageActionCreator(messageText)
             dispatch(action)
         }

@@ -10,10 +10,12 @@ import {connect} from "react-redux";
 import {Redirect, withRouter} from "react-router";
 import {compose} from "redux";
 import {ProfileType} from "../types/types";
+import {AppStateType} from "../redux/redux-store";
 
 type MapStateToPropsType = {
     profile: ProfileType
     status: string
+    match: any
 }
 
 type MapDispatchToPropsType = {
@@ -22,11 +24,14 @@ type MapDispatchToPropsType = {
     getStatusTC: (userId: number) => void
     updateStatusTC: (status: string) => void
     saveProfileTC: (profile: ProfileType) => void
+
     
 }
 
+type ProfilesContainerType = MapStateToPropsType & MapDispatchToPropsType
 
-class ProfileContainer extends React.Component {
+
+class ProfileContainer extends React.Component<ProfilesContainerType> {
 
 
     refreshProfile() {
@@ -47,7 +52,7 @@ class ProfileContainer extends React.Component {
         this.refreshProfile()
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps:any, prevState: any) {
 
         if (this.props.match.params.userId != prevProps.match.params.userId) {
             this.refreshProfile()
@@ -72,12 +77,13 @@ class ProfileContainer extends React.Component {
     }
 }
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType) => {
     return {
         profile: state.profilePage.profile,
         status: state.profilePage.status
     }
 }
+
 
 export default compose(
     connect(mapStateToProps, {savePhotoTC, getProfileTC, getStatusTC, updateStatusTC, saveProfileTC}),

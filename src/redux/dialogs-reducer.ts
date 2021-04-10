@@ -1,11 +1,6 @@
 let ADD_MESSAGE = 'ADD-MESSAGE'
 let UPDATE_NEW_MESSAGE = 'UPDATE-NEW-MESSAGE'
 
-type InitialStateType = {
-    dialogs: Array<DialogsType>
-    messages: Array<MessagesType>
-    newMessageText: string
-}
 
 type DialogsType = {
     id: number
@@ -25,7 +20,7 @@ type UpdateNewMessageActionType = {
     messageText: string
 }
 
-let initialState: InitialStateType = {
+let initialState: DialogsReducerInitialType = {
     dialogs: [
         {id: 1, name: 'Farid'},
         {id: 2, name: 'Sudjaat'},
@@ -42,7 +37,14 @@ let initialState: InitialStateType = {
 
 }
 
-export const dialogsReducer = (state = initialState, action: any): InitialStateType => {
+
+export type DialogsReducerInitialType = {
+    dialogs: Array<DialogsType>
+    messages: Array<MessagesType>
+    newMessageText: string
+}
+
+export const dialogsReducer = (state = initialState, action: any): DialogsReducerInitialType => {
     let stateCopy
     switch (action.type) {
         case ADD_MESSAGE: {

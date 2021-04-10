@@ -83,13 +83,13 @@ let initialState = {
 
 }
 
-type initialStateType = typeof initialState
+export type ProfilePageInitialStateType = typeof initialState
 
 type ActionTypes = AddPostActionType | UpdateNewPostTextActionType
     | SetUserProfileActionType | SetStatusActionType
     | SavePhotoActionType
 
-export const profileReducer = (state = initialState, action: any): initialStateType => {
+export const profileReducer = (state = initialState, action: any): ProfilePageInitialStateType => {
     switch (action.type) {
         case  ADD_POST: {
 
