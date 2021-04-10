@@ -1,12 +1,12 @@
 import React from 'react'
 import {connect} from "react-redux";
 import {
-    followAC, followSuccesAC, followSuccessAC, followTC, getUsersTC,
+ followTC, getUsersTC,
     setCurrentPageAC,
     setTotalCountAC,
     setUsersAC,
     toggleIsFetchingAC, toggleIsFollowingProgress,
-    unFollowAC, unFollowSuccessAC, unfollowTC
+ unfollowTC
 } from "../redux/users-reducer";
 import * as axios from "axios";
 import Users from "./Users";
@@ -21,11 +21,36 @@ import {
     getTotalCount,
     getUsers
 } from "../redux/users-selector";
+import {UsersType} from "../types/types";
+import { AppStateType} from '../redux/redux-store';
+import {compose} from "redux";
 
 
 
 
-class UsersAPIComponent extends React.Component {
+type MapDispatchToPropsType = {
+    followingInProgress: Array<number>
+    followTC: any
+    unfollowTC: any
+    toggleIsFollowingProgress: any
+    getUsersTC: (currentPage: number, pageSize: number) => void
+
+}
+
+type MapStateToPropsType = {
+    users: Array<UsersType>
+    pageSize: number
+    totalCount: number
+    currentPage: number
+    isFetching:  boolean
+
+}
+
+type UsersContainerPropsType = MapDispatchToPropsType & MapStateToPropsType
+
+
+
+class UsersContainer extends React.Component<UsersContainerPropsType> {
 
     componentDidMount() {
 
@@ -39,7 +64,7 @@ class UsersAPIComponent extends React.Component {
 
     }
 
-    onPageChanged =  (pageNumber) => {
+    onPageChanged =  (pageNumber: number) => {
         this.props.getUsersTC(pageNumber, this.props.pageSize)
 
     }
@@ -74,9 +99,9 @@ class UsersAPIComponent extends React.Component {
 
 
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType) => {
     return {
-        users:  getUsers(state),
+        users:  state.usersPage.users,
         pageSize: getPageSize(state),
         totalCount:getTotalCount(state),
         currentPage:getCurrentPage(state),
@@ -89,9 +114,9 @@ let mapStateToProps = (state) => {
 
 
 
-const UsersContainer = connect(mapStateToProps, {followTC,unfollowTC,setUsersAC,
+// @ts-ignore
+export default compose(connect<MapDispatchToPropsType, MapStateToPropsType, AppStateType>(mapStateToProps, {followTC,unfollowTC,setUsersAC,
     setCurrentPageAC,setTotalCountAC,
     toggleIsFetchingAC, toggleIsFollowingProgress,
     getUsersTC
-})(UsersAPIComponent)
-export default UsersContainer
+}))(UsersContainer)

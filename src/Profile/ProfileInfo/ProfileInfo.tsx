@@ -1,14 +1,23 @@
-import React, {useState} from 'react'
+import React, {ChangeEvent, ChangeEventHandler, useState} from 'react'
 import classes from "../Profile.module.css";
 import preloader from '../../photo/preloader.gif'
-import ProfileStatus from "./ProfileStatus";
-import {saveProfileTC, updateStatusTC} from "../../redux/profile-reducer";
 import ProfileHookStatus from "./ProfileStatusHook";
 import userPhoto from '../../photo/108180118-user-vector-icon-isolated-on-transparent-background-user-logo-concept.jpg'
 import {ProfileDataForm} from "./ProfileDataForm";
 import {Button, FormGroup} from "@material-ui/core";
+import {ProfileType} from "../../types/types";
 
-export const ProfileInfo = (props) => {
+
+type ProfileInfoType = {
+    saveProfileTC: (profile: ProfileType) => void
+    savePhotoTC: (file: string) => void
+    isOwner: boolean
+    profile: any
+    status: string
+    updateStatusTC: (status: string) => void
+}
+
+export const ProfileInfo = (props: ProfileInfoType) => {
 
     const [editMode, setEditMode] = useState(false)
 
@@ -16,7 +25,7 @@ export const ProfileInfo = (props) => {
         return <img src={preloader}/>
     }
 
-    const onMainPhotoSelected = (e) => {
+    const onMainPhotoSelected = (e: any) => {
         if (e.target.files.length) {
             props.savePhotoTC(e.target.files[0])
         }
@@ -45,8 +54,14 @@ export const ProfileInfo = (props) => {
 }
 
 
+type ProfileDataFormType = {
+    goToEditMode: () => void
+    profile: any
+    isOwner: boolean
 
-export const ProfileData = (props) => {
+}
+
+export const ProfileData = (props: ProfileDataFormType) => {
     return (
         <div>
             {props.isOwner &&  <Button onClick={props.goToEditMode} type={'submit'} variant={'contained'} color={'secondary'}>Edit</Button>}
@@ -72,7 +87,12 @@ export const ProfileData = (props) => {
     </div>)
 }
 
+type ContactPropsType = {
+    contactTitle: string
+    contactValue: number
+}
 
-export const Contact = ({contactTitle, contactValue}) => {
-    return <div className={classes.contact}><b>{contactTitle}</b>: {contactValue}</div>
+
+export const Contact = (props:ContactPropsType ) => {
+    return <div className={classes.contact}><b>{props.contactTitle}</b>: {props.contactValue}</div>
 }

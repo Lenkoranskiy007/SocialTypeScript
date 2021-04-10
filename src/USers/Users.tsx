@@ -4,9 +4,22 @@ import usersPhoto from "../photo/108180118-user-vector-icon-isolated-on-transpar
 import {NavLink} from "react-router-dom";
 import * as axios from "axios";
 import {usersAPI} from "../Api/Api";
+import {UsersType} from "../types/types";
+
+type UsersPropsType = {
+    pageSize: number
+    onPageChanged: (pageNumber: number) => void
+    totalCount: number
+    currentPage: number
+    users: Array<UsersType>
+    followTC: any
+    unfollowTC: any
+    followingInProgress:  Array<number>
+    toggleIsFollowingProgress: any
+}
 
 
- const Users = (props, portionSize = 5) => {
+ const Users = (props:UsersPropsType, portionSize = 5) => {
 
     let pagesCount = Math.ceil( props.totalCount / 300)
 
@@ -21,7 +34,8 @@ import {usersAPI} from "../Api/Api";
         <div className={classes.paginator} >
             {
                      pages.map(p => {
-                        return  <span  className={props.currentPage === p && classes.selectedPage}
+                        // @ts-ignore
+                         return  <span  className={props.currentPage === p && classes.selectedPage}
                                        onClick={() => { props.onPageChanged(p)}}
 
                         >{p}</span>
@@ -72,4 +86,5 @@ import {usersAPI} from "../Api/Api";
 
 }
 
+// @ts-ignore
 export default Users

@@ -18,7 +18,7 @@ export type ProfileType = {
     photos: PhotosType
 }
 
-type ContactsType = {
+export type ContactsType = {
     github: string
     vk: string
     facebook: string
@@ -29,7 +29,7 @@ type ContactsType = {
     mainLink: string
 
 }
-type UsersType = {
+export type UsersType = {
     id: number
     name: string
     status: string

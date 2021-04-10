@@ -183,7 +183,7 @@ export const updateStatusTC = (status: string) => {
     }
 }
 
-export const savePhotoTC = (file: any) => {
+export const savePhotoTC = (file: string) => {
     return async (dispatch: Dispatch) => {
         let response = await profileAPI.savePhoto(file)
         if (response.data.resultCode === 0) {
