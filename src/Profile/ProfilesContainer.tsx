@@ -4,14 +4,27 @@ import {
     getProfileTC,
     getStatusTC,
     savePhotoTC, saveProfileTC,
-    setUserProfileActionCreator,
     updateStatusTC
 } from "../redux/profile-reducer";
-import * as axios from "axios";
 import {connect} from "react-redux";
 import {Redirect, withRouter} from "react-router";
-import {withAuthRedirect} from "../hoc/withAutthRedirect";
 import {compose} from "redux";
+import {ProfileType} from "../types/types";
+
+type MapStateToPropsType = {
+    profile: ProfileType
+    status: string
+}
+
+type MapDispatchToPropsType = {
+    savePhotoTC: (file: string) => void
+    getProfileTC: (userId: number) => void
+    getStatusTC: (userId: number) => void
+    updateStatusTC: (status: string) => void
+    saveProfileTC: (profile: ProfileType) => void
+    
+}
+
 
 class ProfileContainer extends React.Component {
 
@@ -19,7 +32,7 @@ class ProfileContainer extends React.Component {
     refreshProfile() {
         let userId = this.props.match.params.userId
 
-        if(!userId) {
+        if (!userId) {
             userId = 2
         }
         // axios.get(`https://social-network.samuraijs.com/api/1.0/profile/` + userId).then(response => {
@@ -36,7 +49,7 @@ class ProfileContainer extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
-        if(this.props.match.params.userId != prevProps.match.params.userId) {
+        if (this.props.match.params.userId != prevProps.match.params.userId) {
             this.refreshProfile()
         }
 

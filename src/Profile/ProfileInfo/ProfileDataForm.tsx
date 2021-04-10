@@ -3,12 +3,17 @@ import {useFormik} from "formik";
 import {Redirect} from "react-router";
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, TextField} from "@material-ui/core";
 import {Contact} from "./ProfileInfo";
+import {ProfileType} from "../../types/types";
+
+type ProfileDataFormType = {
+    profile: any
+    saveProfileTC: (profile: ProfileType) => void
+    setEditMode: any
+}
 
 
 
-
-
-export const  ProfileDataForm = (props) => {
+export const  ProfileDataForm = (props: ProfileDataFormType) => {
 
     const contactsTitle = () => {
        return <div>
@@ -27,7 +32,7 @@ export const  ProfileDataForm = (props) => {
             // contacts: Object.keys(props.profile.contacts)
 
         },
-        onSubmit: values => {
+        onSubmit: (values: any) => {
             formik.resetForm()
             props.saveProfileTC(values)
             props.setEditMode(false)
