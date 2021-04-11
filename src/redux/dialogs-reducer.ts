@@ -2,6 +2,7 @@ let ADD_MESSAGE = 'ADD-MESSAGE'
 let UPDATE_NEW_MESSAGE = 'UPDATE-NEW-MESSAGE'
 
 
+
 type DialogsType = {
     id: number
     name: string
@@ -10,6 +11,8 @@ type MessagesType = {
     id: number
     message: string
 }
+
+type ActionTypes = AddMessageActionType | UpdateNewMessageActionType
 
 type AddMessageActionType = {
     type: typeof ADD_MESSAGE

@@ -1,6 +1,7 @@
 import {usersAPI} from "../Api/Api";
 import * as axios from "axios";
 import {PhotosType} from "../types/types";
+import {Dispatch} from "redux";
 
 let FOLLOW = 'FOLLOW'
 let UNFOLLOW = 'UNFOLLOW'
@@ -11,7 +12,7 @@ let TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 let TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS'
 
 
-type FollowSuccessActionType = {
+    type FollowSuccessActionType = {
     type: typeof FOLLOW
     userId: number
 
@@ -75,6 +76,11 @@ let initialState = {
 
 
 type InitialStateType = typeof initialState
+
+type ActionTypes = FollowSuccessActionType | UnFollowSuccessActionType | SetUsersActionType| SetCurrentPageActionType |
+    SetTotalCountActionType | ToggleIsFetchingActionType | ToggleIsFollowingProgressActionType
+
+
 
 
 export const usersReducer = (state = initialState, action: any): InitialStateType => {
@@ -163,8 +169,10 @@ export const toggleIsFollowingProgress = (isFetching: boolean, userId: number): 
     return {type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId}
 }
 
+
+
 export const getUsersTC = (currentPage: number, pageSize: number) => {
-    return (dispatch: any) => {
+    return (dispatch: Dispatch) => {
         dispatch(toggleIsFetchingAC(true))
         usersAPI.getUsers(currentPage, pageSize).then((data: any) => {
             dispatch(toggleIsFetchingAC(false))
@@ -176,7 +184,7 @@ export const getUsersTC = (currentPage: number, pageSize: number) => {
 }
 
 export const unfollowTC = (userId: number) => {
-    return (dispatch: any) => {
+    return (dispatch: Dispatch) => {
         dispatch(toggleIsFollowingProgress(true, userId))
         usersAPI.unfollow(userId).then((data: any) => {
             if (data.resultCode === 0) {
@@ -187,7 +195,7 @@ export const unfollowTC = (userId: number) => {
     }
 }
 export const followTC = (userId: number) => {
-    return (dispatch: any) => {
+    return (dispatch: Dispatch) => {
         dispatch(toggleIsFollowingProgress(true, userId))
         usersAPI.follow(userId).then((data: any) => {
             if (data.resultCode === 0) {

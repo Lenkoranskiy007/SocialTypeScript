@@ -1,12 +1,14 @@
 import * as axios from "axios";
 import {profileAPI, usersAPI} from "../Api/Api";
 import {Dispatch} from "redux";
+import {AppStateType} from "./redux-store";
 
 let ADD_POST = 'ADD-POST'
 let UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT'
 let SET_USER_PROFILE = 'SET_USER_PROFILE'
 let SET_STATUS = 'SET_STATUS'
 let SAVE_PHOTO = 'SAVE_PHOTO'
+
 
 type AddPostActionType = {
     type: typeof ADD_POST
@@ -201,10 +203,11 @@ export const savePhotoTC = (file: string) => {
 }
 
 export const saveProfileTC = (profile: ProfileType) => {
-    return async (dispatch: any, getState: any) => {
+    return async (dispatch: Dispatch, getState:() => AppStateType) => {
         const userId = getState().auth.userId
         const response = await profileAPI.saveProfile(profile)
         if (response.data.resultCode === 0) {
+            // @ts-ignore
             dispatch(getProfileTC(userId))
         }
     }
