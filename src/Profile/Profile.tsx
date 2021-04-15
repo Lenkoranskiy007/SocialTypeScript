@@ -10,7 +10,6 @@ type ProfileType = {
     profile: ProfileType
     status: string
     updateStatusTC: (status: string) => void
-
 }
 
 
@@ -21,7 +20,6 @@ export const Profile = (props: any) => {
         <hr/>
         <MyPostsContainer />
         </div>
-
 
 }
 

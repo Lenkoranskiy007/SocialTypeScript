@@ -115,7 +115,7 @@ let mapStateToProps = (state: AppStateType) => {
 
 
 // @ts-ignore
-export default compose(connect<MapDispatchToPropsType, MapStateToPropsType, AppStateType>(mapStateToProps, {followTC,unfollowTC,setUsersAC,
+export default compose<React.ComponentType>(connect<MapDispatchToPropsType, MapStateToPropsType, AppStateType>(mapStateToProps, {followTC,unfollowTC,setUsersAC,
     setCurrentPageAC,setTotalCountAC,
     toggleIsFetchingAC, toggleIsFollowingProgress,
     getUsersTC

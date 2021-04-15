@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import {profileAPI, usersAPI} from "../Api/Api";
+import {profileAPI, ResultCodeEnum, usersAPI} from "../Api/Api";
 import {Dispatch} from "redux";
 import {AppStateType} from "./redux-store";
 
@@ -178,7 +178,7 @@ export const getStatusTC = (userId: number) => {
 export const updateStatusTC = (status: string) => {
     return (dispatch: Dispatch) => {
         profileAPI.updateStatus(status).then((response: any) => {
-            if (response.data.resultCode === 0) {
+            if (response.data.resultCode === ResultCodeEnum.Success) {
                 dispatch(setStatusActionCreator(status))
             }
         })
@@ -188,7 +188,7 @@ export const updateStatusTC = (status: string) => {
 export const savePhotoTC = (file: string) => {
     return async (dispatch: Dispatch) => {
         let response = await profileAPI.savePhoto(file)
-        if (response.data.resultCode === 0) {
+        if (response.data.resultCode === ResultCodeEnum.Success) {
             dispatch(savePhotoAC(response.data.data.photos))
         }
         //
@@ -206,7 +206,7 @@ export const saveProfileTC = (profile: ProfileType) => {
     return async (dispatch: Dispatch, getState:() => AppStateType) => {
         const userId = getState().auth.userId
         const response = await profileAPI.saveProfile(profile)
-        if (response.data.resultCode === 0) {
+        if (response.data.resultCode === ResultCodeEnum.Success) {
             // @ts-ignore
             dispatch(getProfileTC(userId))
         }

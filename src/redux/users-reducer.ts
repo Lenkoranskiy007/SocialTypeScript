@@ -1,4 +1,4 @@
-import {usersAPI} from "../Api/Api";
+import {ResultCodeEnum, usersAPI} from "../Api/Api";
 import * as axios from "axios";
 import {PhotosType} from "../types/types";
 import {Dispatch} from "redux";
@@ -187,7 +187,7 @@ export const unfollowTC = (userId: number) => {
     return (dispatch: Dispatch) => {
         dispatch(toggleIsFollowingProgress(true, userId))
         usersAPI.unfollow(userId).then((data: any) => {
-            if (data.resultCode === 0) {
+            if (data.resultCode === ResultCodeEnum.Success) {
                 dispatch(unFollowSuccessAC(userId))
             }
             dispatch(toggleIsFollowingProgress(false, userId))
@@ -198,7 +198,7 @@ export const followTC = (userId: number) => {
     return (dispatch: Dispatch) => {
         dispatch(toggleIsFollowingProgress(true, userId))
         usersAPI.follow(userId).then((data: any) => {
-            if (data.resultCode === 0) {
+            if (data.resultCode === ResultCodeEnum.Success) {
                 dispatch(followSuccessAC(userId))
             }
             dispatch(toggleIsFollowingProgress(false, userId))

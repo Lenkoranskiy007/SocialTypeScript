@@ -34,6 +34,7 @@ export const MyPosts = React.memo((props: MyPostsType) => {
             <div>My posts</div>
             <textarea value={props.profilePage.newPostText} onChange={onChangePost}  ></textarea>
             <button onClick={addPost}>Add post</button>
+          
             {postsElements}
         </div>
 

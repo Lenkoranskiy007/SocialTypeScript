@@ -1,4 +1,4 @@
-import {authAPI, securityAPI, usersAPI} from "../Api/Api";
+import {authAPI, ResultCodeCaptcha, ResultCodeEnum, securityAPI, usersAPI} from "../Api/Api";
 import * as formik from "formik";
 import {useFormik} from "formik";
 import {Dispatch} from "redux";
@@ -80,7 +80,7 @@ export const getCaptchaUrlTC = () => async (dispatch: Dispatch) => {
 
 export const getAuthUserData = () => (dispatch: Dispatch) => {
     return authAPI.me().then((response: any) => {
-        if (response.data.resultCode === 0) {
+        if (response.data.resultCode === ResultCodeEnum.Success) {
             let {id, email, login} = response.data.data
             dispatch(setUserDataActionCreator(id, email, login, true))
         }
@@ -92,10 +92,10 @@ export const getAuthUserData = () => (dispatch: Dispatch) => {
 export const loginTC = (email: string, password: number, rememberMe: boolean, captcha: string) => {
     return async (dispatch: Dispatch) => {
         let response = await authAPI.login(email, password, rememberMe, captcha)
-        if (response.data.resultCode === 0) {
+        if (response.data.resultCode === ResultCodeEnum.Success) {
             // @ts-ignore
             dispatch(getAuthUserData())
-        } else if (response.data.resultCode === 10) {
+        } else if (response.data.resultCode === ResultCodeCaptcha.Captcha) {
             // @ts-ignore
             dispatch(getCaptchaUrlTC())
         }
@@ -105,7 +105,7 @@ export const loginTC = (email: string, password: number, rememberMe: boolean, ca
 export const logoutTC = () => {
     return (dispatch: Dispatch) => {
         authAPI.logout().then((response: any) => {
-            if (response.data.resultCode === 0) {
+            if (response.data.resultCode === ResultCodeEnum.Success) {
                 dispatch(setUserDataActionCreator(null, null, null, false))
             }
         })
