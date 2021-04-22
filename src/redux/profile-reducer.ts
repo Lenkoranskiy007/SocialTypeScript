@@ -1,4 +1,4 @@
-import * as axios from "axios";
+import axios from "axios";
 import {profileAPI, ResultCodeEnum, usersAPI} from "../Api/Api";
 import {Dispatch} from "redux";
 import {AppStateType} from "./redux-store";

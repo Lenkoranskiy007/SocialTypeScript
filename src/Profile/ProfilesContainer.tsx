@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Profile} from "./Profile";
 import {
     getProfileTC,
@@ -6,61 +6,58 @@ import {
     savePhotoTC, saveProfileTC,
     updateStatusTC
 } from "../redux/profile-reducer";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {Redirect, withRouter} from "react-router";
 import {compose} from "redux";
 import {ProfileType} from "../types/types";
 import {AppStateType} from "../redux/redux-store";
 
-type MapStateToPropsType = {
-    profile: ProfileType
-    status: string
+type ProfilesContainerType = {
     match: any
 }
 
-type MapDispatchToPropsType = {
-    savePhotoTC: (file: string) => void
-    getProfileTC: (userId: number) => void
-    getStatusTC: (userId: number) => void
-    updateStatusTC: (status: string) => void
-    saveProfileTC: (profile: ProfileType) => void
 
+
+
+const  ProfileContainer = React.memo((props:ProfilesContainerType) => {
     
-}
+    const dispatch = useDispatch()
 
-type ProfilesContainerType = MapStateToPropsType & MapDispatchToPropsType
+    const getProfile  = (userId: number) => {
+        dispatch(getProfileTC(userId))
+    } 
+
+    const getStatus = (userId: number) => {
+        dispatch(getStatusTC(userId))
+    }
 
 
-class ProfileContainer extends React.Component<ProfilesContainerType> {
-
-
-    refreshProfile() {
-        let userId = this.props.match.params.userId
+     const  refreshProfile = () => {
+        let userId = props.match.params.userId
 
         if (!userId) {
             userId = 2
         }
-        // axios.get(`https://social-network.samuraijs.com/api/1.0/profile/` + userId).then(response => {
-        //     this.props.setUserProfileActionCreator(response.data)
-        // })
-        this.props.getProfileTC(userId)
-        this.props.getStatusTC(userId)
+        
+        getProfile(userId)
+        getStatus(userId)
     }
 
 
-    componentDidMount() {
-        this.refreshProfile()
-    }
 
-    componentDidUpdate(prevProps:any, prevState: any) {
 
-        if (this.props.match.params.userId != prevProps.match.params.userId) {
-            this.refreshProfile()
-        }
+    useEffect(() => {
+        refreshProfile()
+    }, [])
+    // componentDidUpdate(prevProps:any, prevState: any) {
 
-    }
+    //     if (this.props.match.params.userId != prevProps.match.params.userId) {
+    //         this.refreshProfile()
+    //     }
 
-    render() {
+    // }
+
+   
 
         return (
             <Profile
@@ -68,25 +65,19 @@ class ProfileContainer extends React.Component<ProfilesContainerType> {
                 // profile={this.props.profile}
                 // status={this.props.status}
                 // updateStatusTC={this.props.updateStatusTC}
-                isOwner={!this.props.match.params.userId}
+                isOwner={!props.match.params.userId}
                 // savePhotoTC={this.props.savePhotoTC}
                 // saveProfileTC={this.props.saveProfileTC}
             />
         )
 
-    }
-}
+    
+})
 
-let mapStateToProps = (state: AppStateType) => {
-    return {
-        profile: state.profilePage.profile,
-        status: state.profilePage.status
-    }
-}
+
 
 
 export default compose<React.ComponentType>(
-    connect(mapStateToProps, {savePhotoTC, getProfileTC, getStatusTC, updateStatusTC, saveProfileTC}),
     withRouter,
     //withAuthRedirect
 )(ProfileContainer)
