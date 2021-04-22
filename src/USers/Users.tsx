@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import classes from "./Users.module.css";
 import usersPhoto from "../photo/108180118-user-vector-icon-isolated-on-transparent-background-user-logo-concept.jpg";
 import {NavLink} from "react-router-dom";
@@ -6,44 +6,81 @@ import * as axios from "axios";
 import {usersAPI} from "../Api/Api";
 import {UsersType} from "../types/types";
 import {UsersSearchForm} from './UsersSearchForm'
-import { FilterType } from '../redux/users-reducer';
+import { FilterType , getUsersTC,followTC, unfollowTC, toggleIsFetchingAC, setUsersAC, setTotalCountAC} from '../redux/users-reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { stat } from 'node:fs';
+import { AppStateType } from '../redux/redux-store';
+import {getTotalCount, getPageSize, getCurrentPage, getFollowingInProgress, getUsersFilter }from "../redux/users-selector";
 
 
-type UsersPropsType = {
-    pageSize: number
-    onPageChanged: (pageNumber: number) => void
-    onFilterChanged: (filter: FilterType ) => void
-    totalCount: number
-    currentPage: number
-    users: Array<UsersType>
-    followTC: any
-    unfollowTC: any
-    followingInProgress:  Array<number>
-    toggleIsFollowingProgress: any
-}
 
 
- const Users = (props:UsersPropsType, portionSize = 5) => {
+ const Users: React.FC = (props, portionSize = 5) => {
+ 
+    useEffect(() => {
+    dispatch(getUsersTC(currentPage, pageSize, filter))
+        // dispatch(toggleIsFetchingAC(true))
+        // usersAPI.getUsers(currentPage, pageSize ).then(data => {
+        //         toggleIsFetchingAC(false)
+        //         //@ts-ignore
+        //         setUsersAC(data.items)
+        //         setTotalCountAC(data.totalCount)
+        //     })
+   }, [])
 
-    let pagesCount = Math.ceil( props.totalCount / 300)
+    const dispatch = useDispatch()
+   
+    const totalCount = useSelector(getTotalCount)
+    const pageSize = useSelector(getPageSize)
+    const currentPage = useSelector(getCurrentPage)
+    const followingInProgress = useSelector(getFollowingInProgress)
+    const users = useSelector((state: AppStateType) => state.usersPage.users)
+    const filter = useSelector(getUsersFilter)
+
+
+
+
+
+    let pagesCount = Math.ceil( totalCount / 300)
 
     let pages = []
     for(let i = 1; i <= pagesCount; i++) {
         pages.push(i)
     }
 
+
+    
+    const  onPageChanged =  (pageNumber: number) => {
+        dispatch(getUsersTC(pageNumber, pageSize, filter))
+
+    }
+
+
+    const onFilterChanged = (filter: FilterType) => {
+       dispatch(getUsersTC(1, pageSize, filter))
+   }
+
+   const follow = (userId: number) => {
+       dispatch(followTC(userId))
+   }
+    
+   const unfollow = (userId: number) => {
+    dispatch( unfollowTC(userId))
+}
+ 
+
     
 
 
     return (
         <div>
-            <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
+            <UsersSearchForm onFilterChanged={onFilterChanged}/>
         <div className={classes.paginator} >
             {
                      pages.map(p => {
                         // @ts-ignore
-                         return  <span  className={props.currentPage === p && classes.selectedPage}
-                                       onClick={() => { props.onPageChanged(p)}}
+                         return  <span  className={currentPage === p && classes.selectedPage}
+                                       onClick={() => { onPageChanged(p)}}
 
                         >{p}</span>
                     })}
@@ -51,7 +88,7 @@ type UsersPropsType = {
 
             {
 
-                props.users.map(u => <div key={u.id}>
+                users.map(u => <div key={u.id}>
                     <span>
                         <div>
                             <NavLink to={'/profile/' + u.id}>
@@ -60,12 +97,12 @@ type UsersPropsType = {
                         </div>
                         <div>
                             {u.followed
-                                ? <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
-                                    props.unfollowTC(u.id)
+                                ? <button disabled={followingInProgress.some(id => id === u.id)} onClick={() => {
+                                    unfollow(u.id)
                                 }}
                                 > Unfollow</button>
-                                : <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
-                                    props.followTC(u.id)
+                                : <button disabled={followingInProgress.some(id => id === u.id)} onClick={() => {
+                                    follow(u.id)
                                 }}> Follow</button>
                             }
 

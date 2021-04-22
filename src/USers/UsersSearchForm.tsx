@@ -57,9 +57,9 @@ export const UsersSearchForm: React.FC<UserSearchType> = React.memo((props) => {
           </Field>
           
         
-           <Button type="submit"   color='secondary' disabled={isSubmitting}>
+           <button type="submit"  style={{color: 'red'}} disabled={isSubmitting}>
              Find
-           </Button>
+           </button>
          </Form>
        )}
      </Formik>

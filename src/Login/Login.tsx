@@ -1,31 +1,36 @@
 import React from 'react'
 import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, TextField, Button, Grid} from '@material-ui/core'
 import {useFormik} from "formik";
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {loginTC} from "../redux/auth-reducer";
 import {Redirect} from "react-router";
+import { AppStateType } from '../redux/redux-store';
 
 
 
 
-export const Login = (props) => {
+export const Login = (props: any) => {
+    const dispatch = useDispatch()
+    const captchaUrl = useSelector((state: AppStateType) => state.auth.captchaUrl)
+    const isAuth = useSelector((state: AppStateType) => state.auth.isAuth)
+
 
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
             rememberMe: false,
-            captchaUrl: props.captchaUrl
+            captchaUrl: captchaUrl
         },
         validate: (values) => {
-            const errors = {};
+            const errors: any = {};
             if (!values.email) {
                 errors.email = 'Required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
                 errors.email = 'Invalid email address';
             } else if(!values.password) {
                 errors.password = 'Required'
-            } else if (values.password < 2) {
+            } else if (values.password.length < 2) {
                 errors.password = 'Invalid password'
             }
             return errors;
@@ -35,11 +40,11 @@ export const Login = (props) => {
         onSubmit: values => {
             // alert(JSON.stringify(values));
             // formik.resetForm()
-
-             props.login(values.email, values.password ,values.rememberMe, values.captchaUrl)
+             //@ts-ignore
+             dispatch(loginTC(values.email, values.password ,values.rememberMe, values.captchaUrl))
         },
     })
-    if(props.isAuth) {
+    if(isAuth) {
         return <Redirect to={'/profile'}/>
     }
 
@@ -71,8 +76,8 @@ export const Login = (props) => {
                         name="rememberMe"
                         />}
                     />
-                    {props.captchaUrl && <img src={props.captchaUrl}/>}
-                    {props.captchaUrl && <TextField
+                    {captchaUrl && <img src={captchaUrl}/>}
+                    {captchaUrl && <TextField
                         margin="normal"
                         {...formik.getFieldProps('captchaUrl')}
                     />}
@@ -86,13 +91,4 @@ export const Login = (props) => {
 }
 
 
-let mapStateToProps = (state) => {
-    return {
-        isAuth: state.auth.isAuth,
-        captchaUrl: state.auth.captchaUrl
-    }
-}
-
-const LoginContainer =  connect(mapStateToProps , {login: loginTC})(Login)
-export default LoginContainer
 

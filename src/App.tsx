@@ -2,10 +2,10 @@ import './App.css';
 import {Navbar} from "./Navbar/Navbar";
 import {Route} from "react-router-dom";
 // import DialogsContainer from "./Dialogs/DialogsContainer";
-import UsersContainer from "./USers/UsersContainer";
+import {UsersContainer} from "./USers/UsersContainer";
 // import ProfilesContainer from "./Profile/ProfilesContainer";
 import HeadersContainer from "./Header/HeaderContainer";
-import LoginContainer, {Login} from "./Login/Login";
+import  {Login} from "./Login/Login";
 import React from 'react'
 import {compose} from "redux";
 import {withRouter} from "react-router";
@@ -60,7 +60,7 @@ class  App extends React.Component<AppPropsType> {
                     <Route path='/users' render={() => <UsersContainer
                     />}/>
 
-                    <Route path='/login' render={() => <LoginContainer
+                    <Route path='/login' render={() => <Login
                     />}/>
 
                 </div>
