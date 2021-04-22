@@ -10,6 +10,7 @@ let SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 let SET_TOTAL_COUNT = 'SET_TOTAL_COUNT'
 let TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 let TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS'
+let SET_FILTER = 'SET_FILTER'
 
 
     type FollowSuccessActionType = {
@@ -71,11 +72,16 @@ let initialState = {
     totalCount: 0,
     currentPage: 1,
     isFetching: false,
-    followingInProgress: [] as Array<number>
+    followingInProgress: [] as Array<number>,
+    filter: {
+      term: '',
+      friend: null as null | boolean
+    }
 }
 
 
 type InitialStateType = typeof initialState
+export type FilterType = typeof initialState.filter
 
 type ActionTypes = FollowSuccessActionType | UnFollowSuccessActionType | SetUsersActionType| SetCurrentPageActionType |
     SetTotalCountActionType | ToggleIsFetchingActionType | ToggleIsFollowingProgressActionType
@@ -128,6 +134,14 @@ export const usersReducer = (state = initialState, action: any): InitialStateTyp
                     : state.followingInProgress.filter((id: any) => id != action.userId)
             }
         }
+        case SET_FILTER: {
+          return {
+              ...state, 
+              filter: action.payload
+          }   
+        }
+        
+        
         default:
             return state
     }
@@ -169,14 +183,19 @@ export const toggleIsFollowingProgress = (isFetching: boolean, userId: number): 
     return {type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId}
 }
 
+export const setFilter = (filter: FilterType) => {
+   return {type: SET_FILTER, payload: {filter}}
+}
+ 
 
 
-export const getUsersTC = (currentPage: number, pageSize: number) => {
-    return (dispatch: Dispatch) => {
+export const getUsersTC = (currentPage: number, pageSize: number, filter: FilterType) => {    //Получение Пользователей со страницы исходя из номера страницы 
+    return (dispatch: Dispatch) => { 
         dispatch(toggleIsFetchingAC(true))
-        usersAPI.getUsers(currentPage, pageSize).then((data: any) => {
+        usersAPI.getUsers(currentPage, pageSize, filter.term, filter.friend).then((data: any) => {
             dispatch(toggleIsFetchingAC(false))
             dispatch(setCurrentPageAC(currentPage))
+            dispatch(setFilter(filter))
             dispatch(setUsersAC(data.items))
             dispatch(setTotalCountAC(data.totalCount))
         })

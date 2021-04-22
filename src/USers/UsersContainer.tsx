@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from "react-redux";
 import {
+    FilterType,
  followTC, getUsersTC,
     setCurrentPageAC,
     setTotalCountAC,
@@ -19,6 +20,7 @@ import {
     getIsFetching,
     getPageSize,
     getTotalCount,
+    getUsersFilter,
     getUsers
 } from "../redux/users-selector";
 import {UsersType} from "../types/types";
@@ -33,7 +35,7 @@ type MapDispatchToPropsType = {
     followTC: any
     unfollowTC: any
     toggleIsFollowingProgress: any
-    getUsersTC: (currentPage: number, pageSize: number) => void
+    getUsersTC: (currentPage: number, pageSize: number, filter: FilterType) => void
 
 }
 
@@ -43,6 +45,7 @@ type MapStateToPropsType = {
     totalCount: number
     currentPage: number
     isFetching:  boolean
+    filter: FilterType
 
 }
 
@@ -54,7 +57,7 @@ class UsersContainer extends React.Component<UsersContainerPropsType> {
 
     componentDidMount() {
 
-        this.props.getUsersTC(this.props.currentPage, this.props.pageSize)
+        this.props.getUsersTC(this.props.currentPage, this.props.pageSize, this.props.filter)
         // this.props.toggleIsFetchingAC(true)
         // usersAPI.getUsers(this.props.currentPage, this.props.pageSize ).then(data => {
         //         this.props.toggleIsFetchingAC(false)
@@ -65,8 +68,13 @@ class UsersContainer extends React.Component<UsersContainerPropsType> {
     }
 
     onPageChanged =  (pageNumber: number) => {
-        this.props.getUsersTC(pageNumber, this.props.pageSize)
+        this.props.getUsersTC(pageNumber, this.props.pageSize, this.props.filter)
 
+    }
+
+    onFilterChanged = (filter: FilterType) => {
+         const {pageSize} = this.props
+        this.props.getUsersTC(1, pageSize, filter)
     }
 
     render() {
@@ -83,6 +91,7 @@ class UsersContainer extends React.Component<UsersContainerPropsType> {
          <Users
             pageSize={this.props.pageSize}
             onPageChanged={this.onPageChanged}
+            onFilterChanged={this.onFilterChanged}
             totalCount={this.props.totalCount}
             currentPage={this.props.currentPage}
             users={ this.props.users}
@@ -106,7 +115,8 @@ let mapStateToProps = (state: AppStateType) => {
         totalCount:getTotalCount(state),
         currentPage:getCurrentPage(state),
         isFetching: getIsFetching(state),
-        followingInProgress: getFollowingInProgress(state)
+        followingInProgress: getFollowingInProgress(state),
+        filter: getUsersFilter(state)
     }
 }
 

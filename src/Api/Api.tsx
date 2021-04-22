@@ -18,7 +18,7 @@ type UsersGetType = {
     error: string
 }
 
-type UsersPostDeleteType = {
+export type UsersPostDeleteType = {
     resultCode: number
     messages: Array<string>
     data: {}
@@ -29,8 +29,8 @@ type UsersPostDeleteType = {
 
 
 export  const usersAPI = {
-    getUsers(currentPage = 1, pageSize = 10) {
-        const promise = instance.get<UsersGetType>(`users?page=${currentPage}&count=${pageSize}`).then(res => {
+    getUsers(currentPage = 1, pageSize = 10, term: string = '', friend: null | boolean = null) {
+        const promise = instance.get<UsersGetType>(`users?page=${currentPage}&count=${pageSize}&term=${term} ` + (friend === null ? '' : `&friend=${friend}`)  ).then(res => {
             return res.data
         })
         return promise

@@ -5,10 +5,14 @@ import {NavLink} from "react-router-dom";
 import * as axios from "axios";
 import {usersAPI} from "../Api/Api";
 import {UsersType} from "../types/types";
+import {UsersSearchForm} from './UsersSearchForm'
+import { FilterType } from '../redux/users-reducer';
+
 
 type UsersPropsType = {
     pageSize: number
     onPageChanged: (pageNumber: number) => void
+    onFilterChanged: (filter: FilterType ) => void
     totalCount: number
     currentPage: number
     users: Array<UsersType>
@@ -32,6 +36,8 @@ type UsersPropsType = {
 
 
     return (
+        <div>
+            <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
         <div className={classes.paginator} >
             {
                      pages.map(p => {
@@ -83,9 +89,11 @@ type UsersPropsType = {
                 )
             }
         </div>
+        </div>
     )
 
 }
+
 
 // @ts-ignore
 export default Users
