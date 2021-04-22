@@ -45,9 +45,7 @@ export const UsersContainer = () => {
 
         return <>
             {isFetching? <Preloader/>: null}
-         <Users
-        
-        />
+         <Users />
         </>
     
 }

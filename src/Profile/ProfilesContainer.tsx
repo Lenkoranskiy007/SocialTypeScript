@@ -64,13 +64,13 @@ class ProfileContainer extends React.Component<ProfilesContainerType> {
 
         return (
             <Profile
-                {...this.props}
-                profile={this.props.profile}
-                status={this.props.status}
-                updateStatusTC={this.props.updateStatusTC}
+                // {...this.props}
+                // profile={this.props.profile}
+                // status={this.props.status}
+                // updateStatusTC={this.props.updateStatusTC}
                 isOwner={!this.props.match.params.userId}
-                savePhotoTC={this.props.savePhotoTC}
-                saveProfileTC={this.props.saveProfileTC}
+                // savePhotoTC={this.props.savePhotoTC}
+                // saveProfileTC={this.props.saveProfileTC}
             />
         )
 

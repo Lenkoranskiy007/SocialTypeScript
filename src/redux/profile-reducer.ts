@@ -53,7 +53,7 @@ type PhotosType = {
     large: string | null
 }
 
-type ProfileType = {
+export type ProfileType = {
     userId: number
     lookingForAJob: boolean
     lookingForAJobDescription: string
