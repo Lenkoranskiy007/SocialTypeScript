@@ -8,25 +8,18 @@ import {UsersType} from "../types/types";
 import {UsersSearchForm} from './UsersSearchForm'
 import { FilterType , getUsersTC,followTC, unfollowTC, toggleIsFetchingAC, setUsersAC, setTotalCountAC} from '../redux/users-reducer';
 import { useDispatch, useSelector } from 'react-redux';
+import {useHistory} from 'react-router-dom'
 import { stat } from 'node:fs';
 import { AppStateType } from '../redux/redux-store';
 import {getTotalCount, getPageSize, getCurrentPage, getFollowingInProgress, getUsersFilter }from "../redux/users-selector";
+import * as queryString from 'querystring'
 
 
 
 
  const Users: React.FC = (props, portionSize = 5) => {
  
-    useEffect(() => {
-    dispatch(getUsersTC(currentPage, pageSize, filter))
-        // dispatch(toggleIsFetchingAC(true))
-        // usersAPI.getUsers(currentPage, pageSize ).then(data => {
-        //         toggleIsFetchingAC(false)
-        //         //@ts-ignore
-        //         setUsersAC(data.items)
-        //         setTotalCountAC(data.totalCount)
-        //     })
-   }, [])
+  
 
     const dispatch = useDispatch()
    
@@ -38,6 +31,64 @@ import {getTotalCount, getPageSize, getCurrentPage, getFollowingInProgress, getU
     const filter = useSelector(getUsersFilter)
 
 
+    const history = useHistory()
+
+   type QueryParamsType = {term?: string; page?: string; friend?: string}
+
+ 
+    useEffect(() => {
+        const parsed = queryString.parse(history.location.search.substr(1)) as QueryParamsType
+
+        let actualPage = currentPage
+        let actualFilter = filter
+   
+        if(!!parsed.page) actualPage = Number(parsed.page)
+        if (!!parsed.term) actualFilter = {...actualFilter, term: parsed.term as string}
+        switch(parsed.friend) {
+            case 'null':
+                actualFilter = {...actualFilter, friend: null}
+                break;
+            case 'true': 
+            actualFilter = {...actualFilter, friend: true}
+            break;
+            case 'false': 
+            actualFilter = {...actualFilter, friend: false}
+            break   
+        }
+        
+        
+          
+
+        dispatch(getUsersTC(actualPage, pageSize, actualFilter))
+            // dispatch(toggleIsFetchingAC(true))
+            // usersAPI.getUsers(currentPage, pageSize ).then(data => {
+            //         toggleIsFetchingAC(false)
+            //         //@ts-ignore
+            //         setUsersAC(data.items)
+            //         setTotalCountAC(data.totalCount)
+            //     })
+       }, [])
+
+
+       useEffect(() => {
+
+
+        const query: QueryParamsType = {}
+        if(!!filter.term) query.term = filter.term
+        if(filter.friend !== null) query.friend = String(filter.friend)
+        if(currentPage !== 1 ) query.page = String(currentPage)
+
+
+
+      
+        history.push( {
+            pathname: '/users',
+            search: queryString.stringify(query)
+            // search: `?term=${filter.term}&friend=${filter.friend}&page=${currentPage}`
+        })
+      
+      }, [filter, currentPage])
+      
 
 
 

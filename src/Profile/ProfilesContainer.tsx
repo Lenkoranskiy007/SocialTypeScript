@@ -17,8 +17,6 @@ type ProfilesContainerType = {
 }
 
 
-
-
 const  ProfileContainer = React.memo((props:ProfilesContainerType) => {
     
     const dispatch = useDispatch()
@@ -49,6 +47,8 @@ const  ProfileContainer = React.memo((props:ProfilesContainerType) => {
     useEffect(() => {
         refreshProfile()
     }, [])
+
+
     // componentDidUpdate(prevProps:any, prevState: any) {
 
     //     if (this.props.match.params.userId != prevProps.match.params.userId) {

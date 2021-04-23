@@ -83,8 +83,8 @@ let initialState = {
 type InitialStateType = typeof initialState
 export type FilterType = typeof initialState.filter
 
-type ActionTypes = FollowSuccessActionType | UnFollowSuccessActionType | SetUsersActionType| SetCurrentPageActionType |
-    SetTotalCountActionType | ToggleIsFetchingActionType | ToggleIsFollowingProgressActionType
+// type ActionTypes = FollowSuccessActionType | UnFollowSuccessActionType | SetUsersActionType| SetCurrentPageActionType |
+//     SetTotalCountActionType | ToggleIsFetchingActionType | ToggleIsFollowingProgressActionType
 
 
 
@@ -184,7 +184,7 @@ export const toggleIsFollowingProgress = (isFetching: boolean, userId: number): 
 }
 
 export const setFilter = (filter: FilterType) => {
-   return {type: SET_FILTER, payload: {filter}}
+   return {type: SET_FILTER, payload: filter}
 }
  
 
