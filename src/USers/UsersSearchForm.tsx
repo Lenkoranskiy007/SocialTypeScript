@@ -69,7 +69,7 @@ export const UsersSearchForm: React.FC<UserSearchType> = React.memo((props) => {
           </Field>
           
         
-           <button type="submit"  style={{color: 'red'}} disabled={isSubmitting}>
+           <button type="submit"  disabled={isSubmitting}>
              
              Find
            </button>
