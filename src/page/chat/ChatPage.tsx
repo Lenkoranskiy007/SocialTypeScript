@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+const wsChannel  = new WebSocket('wss://social-network.samuraijs.com/handlers/ChatHandler.ashx')
 
 const ChatPage = () => {
     return <div>
@@ -6,7 +8,18 @@ const ChatPage = () => {
     </div>
 }
 
+
+type ChatMessageType = {
+    message: string
+    photo: string
+    userId: number
+    userName: string
+}
+
 const Chat = () => {
+
+   
+
     return (<div>
         <Messages/>
         <AddMessageForm/>
@@ -17,28 +30,42 @@ const Chat = () => {
 
  const Messages = () => {
     
-    const messages = [1,2,3,4]
+    const [messages, setMessages] = useState<ChatMessageType[]>([])
+   
+   
+    
+    useEffect( () => {
+        wsChannel.addEventListener('message', (e: MessageEvent) => {
+
+        const newMessage = JSON.parse(e.data)
+
+      setMessages( (prevState) => [...prevState, ...newMessage,])
+     })
+ 
+    } ,
+    
+    [])
+ 
+    
     
     return (<div style={{height: '400px', overflowY: 'auto'}}>
-     {messages.map((m: any, index: number ) => <Message key={index}/>)}
-    {messages.map((m: any, index: number ) => <Message key={index}/>)}
+     {messages.map((message: ChatMessageType, index: number ) => <Message message={message} key={index}/>)}
     </div>
 
     )}
 
 
+type MessageType = {
+    message: ChatMessageType
+}
 
-const Message = () => {
-   const message = {
-       url: 'http://via.placeholder.com/30',
-       author: 'Farid',
-       text: 'Hello friend'
-   }
+const Message = (props: MessageType) => {
+
    
    return <div>
-    <img src={message.url}/> <b>{message.author}</b>
+    <img style={{height:'50px'}} src={props.message.photo}/> <b>{props.message.userName}</b>
     <br/>
-    {message.text}
+    {props.message.message}
     <hr/>
     </div>
 }
@@ -47,9 +74,16 @@ const Message = () => {
 
 
 const AddMessageForm = () => {
+
+    const [message, setMessage] = useState('')
+    const sendMessage = () => {
+        wsChannel.send(message)
+    }
+
+    
     return (<div>
-       <div><textarea ></textarea></div> 
-        <div><button>Send</button></div>
+       <div><textarea onChange={(e) => setMessage(e.currentTarget.value)}  value={message}></textarea></div> 
+        <div><button onClick={sendMessage}>Send</button></div>
     </div>
 
     )}
