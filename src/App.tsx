@@ -121,6 +121,8 @@ class  App extends React.Component<AppPropsType> {
                     <Route path='/chat' render={() => <SuspenedChatPage
                     />}/>
                    
+                     <Route path='/chat' render={() => <SuspenedChatPage
+                    />}/>
                    
 
 </Switch>
