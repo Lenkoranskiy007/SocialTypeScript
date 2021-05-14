@@ -24,10 +24,12 @@ const { SubMenu } = Menu;
 
 const DialogsContainer = React.lazy(() => import('./Dialogs/DialogsContainer'));
 const ProfilesContainer = React.lazy(() => import('./Profile/ProfilesContainer'));
+const ChatPage = React.lazy(() => import('./pages/chat/ChatPage'));
 
 
 const SuspendedDialogs = withSuspense(DialogsContainer)
 const SuspendedProfile = withSuspense(ProfilesContainer)
+const SuspenedChatPage = withSuspense(ChatPage)
 
 
 
@@ -92,6 +94,7 @@ class  App extends React.Component<AppPropsType> {
             </SubMenu>
             <SubMenu key="sub2" icon={<LaptopOutlined />} title="Programmer">
               <Menu.Item key="5"><Link to='/Developers'>Developers</Link></Menu.Item>
+              <Menu.Item key="6"><Link to='/Chat'>Chat</Link></Menu.Item>
               
             </SubMenu>
             <SubMenu key="sub3" icon={<NotificationOutlined />} title="subnav 3">
@@ -114,6 +117,10 @@ class  App extends React.Component<AppPropsType> {
 
                     <Route path='/login' render={() => <Login
                     />}/>
+
+                    <Route path='/chat' render={() => <SuspenedChatPage
+                    />}/>
+                   
                    
 
 </Switch>

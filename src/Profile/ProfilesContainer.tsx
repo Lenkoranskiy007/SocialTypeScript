@@ -34,7 +34,7 @@ const  ProfileContainer = React.memo((props:ProfilesContainerType) => {
         let userId = props.match.params.userId
 
         if (!userId) {
-            userId = 2
+            userId = 14666
         }
         
         getProfile(userId)
